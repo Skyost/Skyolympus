@@ -1,0 +1,18 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                   #
+#            Skyolymupus Configuration              #
+#                                                   #
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+Messages:
+  '1': Olympmod enabled !
+  '2': Olympmod disabled !
+  '3': You can't do this from the console !
+Items:
+  '1': Zeus Lightning
+  '2': Trident of Poseidon
+  '3': Scepter of Hades
+  '4': Seeds of Demeter
+  '5': Wood of Gaia
+  '6': Scythe of Thanatos
+  '7': Sword of Ares

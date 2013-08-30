@@ -1,0 +1,15 @@
+name: Skyolympus
+version: 0.1
+main: com.skyost.olympia.Skyolympus
+author: Skyost
+website: http://www.imc-bans.eu
+commands:
+ olympmod:
+  aliases: [olympe, olympus, olympe-mod, olympus-mod]
+  description: Enable the Olympmod.
+  usage: /olympmod for enable the Olympmod.
+  permission: olympmod.realgodmode
+permissions:
+  olympmod.realgodmode:
+   default: op
+   description: Allow you to use the Olympmod.
