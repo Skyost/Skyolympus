@@ -3,6 +3,7 @@ package com.skyost.olympia;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,13 +29,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Skyolympus extends JavaPlugin implements Listener{
 	
 	private HashMap<Player, String> Olympmod = new HashMap<Player, String>();
-	private ItemStack Zeus = new ItemStack(283);
-	private ItemStack Poseidon = new ItemStack(279);
-	private ItemStack Hades = new ItemStack(369);
-	private ItemStack Demeter = new ItemStack(295);
-	private ItemStack Gaia = new ItemStack(269);
-	private ItemStack Thanatos = new ItemStack(291);
-	private ItemStack Ares = new ItemStack(276);
+	private ItemStack Zeus = new ItemStack(Material.GOLD_SWORD);
+	private ItemStack Poseidon = new ItemStack(Material.DIAMOND_AXE);
+	private ItemStack Hades = new ItemStack(Material.BLAZE_ROD);
+	private ItemStack Demeter = new ItemStack(Material.SEEDS);
+	private ItemStack Gaia = new ItemStack(Material.WOOD_SPADE);
+	private ItemStack Thanatos = new ItemStack(Material.STONE_HOE);
+	private ItemStack Ares = new ItemStack(Material.DIAMOND_SWORD);
 	
 	@Override
 	public void onEnable() {
@@ -127,15 +128,20 @@ public class Skyolympus extends JavaPlugin implements Listener{
     	}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	private void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
     	Player player = event.getPlayer();
     	if(Olympmod.get(player) != null) {
     		Entity entity = event.getRightClicked();
     		switch(player.getItemInHand().getTypeId()) {
+    		case 369:
+        		entity.setFireTicks(entity.getMaxFireTicks());
+        		event.setCancelled(true);
+    			break;
     		case 295:
     			entity.getWorld().dropItemNaturally(entity.getLocation(), new ItemStack(Material.SAPLING));
-    			entity.teleport(new Location(player.getWorld(), 0.0, -10.0, 0.0));
+    			entity.teleport(entity.getLocation().add(0, 100, 0));
     			event.setCancelled(true);
     			break;
 			case 269:
@@ -146,22 +152,35 @@ public class Skyolympus extends JavaPlugin implements Listener{
     	}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	private void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
-		if(Olympmod.get(player) != null) {
-			Inventory inv = InvUtils.StringToInventory(Olympmod.get(player));
+		try {
+			if(Olympmod.get(player) != null) {
+				Inventory inv = InvUtils.StringToInventory(Olympmod.get(player));
+				for(int i = 0; i != player.getInventory().getSize(); i++) {
+	    			if(player.getInventory().getItem(i) != null) {
+	    				player.getInventory().removeItem(player.getInventory().getItem(i));
+	    			}
+	    		}
+	    		for(int i = 0; i != inv.getSize(); i++) {
+	    			if(inv.getItem(i) != null) {
+	    				player.getInventory().addItem(inv.getItem(i));
+	    			}
+	    		}
+				Olympmod.remove(player);
+			}
+		}
+		catch(Exception ex) {
+			Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "[Skyolympus] [" + player.getName() + "]" + getConfig().getString("Messages.4"));
 			for(int i = 0; i != player.getInventory().getSize(); i++) {
     			if(player.getInventory().getItem(i) != null) {
     				player.getInventory().removeItem(player.getInventory().getItem(i));
     			}
     		}
-    		for(int i = 0; i != inv.getSize(); i++) {
-    			if(inv.getItem(i) != null) {
-    				player.getInventory().addItem(inv.getItem(i));
-    			}
-    		}
-			Olympmod.remove(player);
+    		player.updateInventory();
+    		Olympmod.remove(player);
 		}
 	}
 	
@@ -192,20 +211,32 @@ public class Skyolympus extends JavaPlugin implements Listener{
             player = (Player) sender;
             if(cmd.getName().equalsIgnoreCase("olympmod")) {
             	if(Olympmod.get(player) != null) {
-            		Inventory inv = InvUtils.StringToInventory(Olympmod.get(player));
-            		for(int i = 0; i != player.getInventory().getSize(); i++) {
-            			if(player.getInventory().getItem(i) != null) {
-            				player.getInventory().removeItem(player.getInventory().getItem(i));
-            			}
+            		try {
+	            		Inventory inv = InvUtils.StringToInventory(Olympmod.get(player));
+	            		for(int i = 0; i != player.getInventory().getSize(); i++) {
+	            			if(player.getInventory().getItem(i) != null) {
+	            				player.getInventory().removeItem(player.getInventory().getItem(i));
+	            			}
+	            		}
+	            		for(int i = 0; i != inv.getSize(); i++) {
+	            			if(inv.getItem(i) != null) {
+	            				player.getInventory().addItem(inv.getItem(i));
+	            			}
+	            		}
+	            		player.updateInventory();
+	            		Olympmod.remove(player);
+	            		sender.sendMessage(ChatColor.RED + getConfig().getString("Messages.2"));
             		}
-            		for(int i = 0; i != inv.getSize(); i++) {
-            			if(inv.getItem(i) != null) {
-            				player.getInventory().addItem(inv.getItem(i));
-            			}
+            		catch(Exception ex) {
+            			sender.sendMessage(ChatColor.RED + getConfig().getString("Messages.4"));
+            			for(int i = 0; i != player.getInventory().getSize(); i++) {
+                			if(player.getInventory().getItem(i) != null) {
+                				player.getInventory().removeItem(player.getInventory().getItem(i));
+                			}
+                		}
+	            		player.updateInventory();
+	            		Olympmod.remove(player);
             		}
-            		player.updateInventory();
-            		Olympmod.remove(player);
-            		sender.sendMessage(ChatColor.RED + getConfig().getString("Messages.2"));
             	}
             	else {
             		Olympmod.put(player, InvUtils.InventoryToString(player.getInventory()));

@@ -1,8 +1,8 @@
 name: Skyolympus
-version: 0.1
+version: 0.2
 main: com.skyost.olympia.Skyolympus
 author: Skyost
-website: http://www.imc-bans.eu
+website: http://www.skyost.eu
 commands:
  olympmod:
   aliases: [olympe, olympus, olympe-mod, olympus-mod]
