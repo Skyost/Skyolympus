@@ -1,6 +1,6 @@
 name: Skyolympus
-version: 0.3
-main: com.skyost.olympia.Skyolympus
+version: 0.4
+main: fr.skyost.olympia.Skyolympus
 author: Skyost
 website: http://www.skyost.eu
 commands:

@@ -1,4 +1,4 @@
-package com.skyost.olympia;
+package fr.skyost.olympia;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -32,12 +33,14 @@ public class Skyolympus extends JavaPlugin implements Listener{
 	
 	private final HashMap<Player, String> Olympmod = new HashMap<Player, String>();
 	public static Inventory olympusInv;
+	public static boolean canBreakBlocks;
 	
 	@Override
 	public final void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
 		loadConfiguration();
 		loadOlympus();
+		canBreakBlocks = getConfig().getBoolean("Config.OlympmodBreakBlocks");
 	}
 	
 	@Override
@@ -118,26 +121,52 @@ public class Skyolympus extends JavaPlugin implements Listener{
     		Player player = event.getPlayer();
     		if(Olympmod.get(player) != null) {
     			Location loc = event.getClickedBlock().getLocation();
+    			World world = player.getWorld();
     			switch(player.getItemInHand().getType()) {
     			case GOLD_SWORD:
-    				player.getWorld().strikeLightning(loc);
-    				player.getWorld().createExplosion(loc, 15.0F, false);
+    				if(canBreakBlocks) {
+    					world.strikeLightning(loc);
+    					world.createExplosion(loc, 15.0F, false);
+    				}
+    				else {
+    					world.strikeLightningEffect(loc);
+    					world.createExplosion(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 15.0F, false, false);
+    				}
     				break;
     			case DIAMOND_AXE:
-    				player.getTargetBlock(null, 100).setType(Material.WATER);
+    				if(canBreakBlocks) {
+    					world.getBlockAt(loc).setType(Material.WATER);
+	    			}
+    				else {
+    					loc.setY(world.getHighestBlockYAt(loc));
+    					loc.add(0, 2, 0);
+    					player.getWorld().getBlockAt(loc).setType(Material.WATER);
+    				}
     				player.getWorld().createExplosion(loc.getX(), loc.getY(), loc.getZ(), 4.0F, false, false);
     				break;
     			case BLAZE_ROD:
-    				player.getWorld().createExplosion(loc, 10.0F, true);
-    				event.getClickedBlock().setType(Material.LAVA);
+    				if(canBreakBlocks) {
+	    				world.createExplosion(loc, 10.0F, true);
+	    				world.getBlockAt(loc).setType(Material.LAVA);
+    				}
+    				else {
+    					world.createExplosion(loc.getX(), loc.getY(), loc.getZ(), 10.0F, false, false);
+    					loc.setY(world.getHighestBlockYAt(loc));
+    					loc.add(0, 2, 0);
+    					player.getWorld().getBlockAt(loc).setType(Material.LAVA);
+    				}
     				break;
     			case SEEDS:
+    				if(canBreakBlocks) {
+    					world.getBlockAt(loc).setType(Material.GRASS);
+    				}
     				player.getWorld().generateTree(loc, TreeType.TREE);
-    				player.getTargetBlock(null, 100).setType(Material.GRASS);
     				break;
     			case WOOD_SPADE:
-    				for(int i = event.getClickedBlock().getY(); i != 0; i--) {
-    					player.getWorld().getBlockAt(event.getClickedBlock().getX(), i, event.getClickedBlock().getZ()).setType(Material.AIR);
+    				if(canBreakBlocks) {
+	    				for(int i = event.getClickedBlock().getY(); i != 0; i--) {
+	    					player.getWorld().getBlockAt(event.getClickedBlock().getX(), i, event.getClickedBlock().getZ()).setType(Material.AIR);
+	    				}
     				}
     				break;
     			case STONE_HOE:

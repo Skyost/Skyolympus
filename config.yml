@@ -4,6 +4,8 @@
 #                                                   #
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+Config:
+  OlympmodBreakBlocks: true
 Messages:
   '1': Olympmod enabled !
   '2': Olympmod disabled !

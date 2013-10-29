@@ -1,4 +1,4 @@
-package com.skyost.olympia;
+package fr.skyost.olympia;
 
 import java.util.Map;
 import java.util.Map.Entry;
