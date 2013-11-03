@@ -48,16 +48,16 @@ public class Skyolympus extends JavaPlugin implements Listener{
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			if(Olympmod.get(player) != null) {
 				Inventory inv = InvUtils.StringToInventory(Olympmod.get(player));
-				for(int i = 0; i != player.getInventory().getSize(); i++) {
-	    			if(player.getInventory().getItem(i) != null) {
-	    				player.getInventory().removeItem(player.getInventory().getItem(i));
-	    			}
-	    		}
-	    		for(int i = 0; i != inv.getSize(); i++) {
-	    			if(inv.getItem(i) != null) {
-	    				player.getInventory().addItem(inv.getItem(i));
-	    			}
-	    		}
+    			for(ItemStack ie : player.getInventory().getContents()) {
+    				if(ie != null) {
+    					player.getInventory().removeItem(ie);
+    				}
+    			}
+    			for(ItemStack ie : inv.getContents()) {
+    				if(ie != null) {
+    					player.getInventory().addItem(ie);
+    				}
+    			}
 				Olympmod.remove(player);
 			}
 		}
@@ -219,26 +219,26 @@ public class Skyolympus extends JavaPlugin implements Listener{
 		try {
 			if(Olympmod.get(player) != null) {
 				Inventory inv = InvUtils.StringToInventory(Olympmod.get(player));
-				for(int i = 0; i != player.getInventory().getSize(); i++) {
-	    			if(player.getInventory().getItem(i) != null) {
-	    				player.getInventory().removeItem(player.getInventory().getItem(i));
-	    			}
-	    		}
-	    		for(int i = 0; i != inv.getSize(); i++) {
-	    			if(inv.getItem(i) != null) {
-	    				player.getInventory().addItem(inv.getItem(i));
-	    			}
-	    		}
+    			for(ItemStack ie : player.getInventory().getContents()) {
+    				if(ie != null) {
+    					player.getInventory().removeItem(ie);
+    				}
+    			}
+				for(ItemStack ie : inv.getContents()) {
+    				if(ie != null) {
+    					player.getInventory().addItem(ie);
+    				}
+    			}
 				Olympmod.remove(player);
 			}
 		}
 		catch(Exception ex) {
 			Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "[Skyolympus] [" + player.getName() + "]" + getConfig().getString("Messages.4"));
-			for(int i = 0; i != player.getInventory().getSize(); i++) {
-    			if(player.getInventory().getItem(i) != null) {
-    				player.getInventory().removeItem(player.getInventory().getItem(i));
-    			}
-    		}
+			for(ItemStack ie : player.getInventory().getContents()) {
+				if(ie != null) {
+					player.getInventory().removeItem(ie);
+				}
+			}
     		player.updateInventory();
     		Olympmod.remove(player);
 		}
@@ -249,16 +249,16 @@ public class Skyolympus extends JavaPlugin implements Listener{
 		Player player = event.getPlayer();
 		if(Olympmod.get(player) != null) {
 			Inventory inv = InvUtils.StringToInventory(Olympmod.get(player));
-			for(int i = 0; i != player.getInventory().getSize(); i++) {
-    			if(player.getInventory().getItem(i) != null) {
-    				player.getInventory().removeItem(player.getInventory().getItem(i));
-    			}
-    		}
-    		for(int i = 0; i != inv.getSize(); i++) {
-    			if(inv.getItem(i) != null) {
-    				player.getInventory().addItem(inv.getItem(i));
-    			}
-    		}
+			for(ItemStack ie : player.getInventory().getContents()) {
+				if(ie != null) {
+					player.getInventory().removeItem(ie);
+				}
+			}
+			for(ItemStack ie : inv.getContents()) {
+				if(ie != null) {
+					player.getInventory().addItem(ie);
+				}
+			}
 			Olympmod.remove(player);
 		}
 	}
